@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Produtividade">
+<title>Central de Produtividade</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+<style>
+:root{
+  --purple:#534AB7;--purple-l:#EEEDFE;--purple-m:#AFA9EC;--purple-d:#3C3489;
+  --teal:#1D9E75;--teal-l:#E1F5EE;--teal-d:#085041;
+  --amber:#BA7517;--amber-l:#FAEEDA;--amber-d:#633806;
+  --coral:#D85A30;--coral-l:#FAECE7;--coral-d:#712B13;
+  --blue:#185FA5;--blue-l:#E6F1FB;--blue-d:#0C447C;
+  --green-l:#EAF3DE;--green-d:#27500A;
+  --gray-l:#F1EFE8;--gray-d:#444441;
+  --red:#E24B4A;
+  --bg:#f5f5f3;--sur:#ffffff;--sur2:#f9f9f7;
+  --tx:#1a1a18;--tx2:#5f5e5a;--tx3:#9f9e9a;
+  --bd:rgba(0,0,0,0.10);--bd2:rgba(0,0,0,0.18);
+  --r:14px;--rsm:8px;--rpill:20px;
+  --safe-b:env(safe-area-inset-bottom,0px);
+  --safe-t:env(safe-area-inset-top,0px);
+}
+@media(prefers-color-scheme:dark){
+  :root{
+    --bg:#1a1a18;--sur:#2a2a28;--sur2:#222220;
+    --tx:#f0f0ee;--tx2:#a0a09e;--tx3:#606060;
+    --bd:rgba(255,255,255,0.10);--bd2:rgba(255,255,255,0.18);
+    --purple-l:#221e5a;--purple-d:#CECBF6;
+    --teal-l:#0a2e1e;--teal-d:#9FE1CB;
+    --amber-l:#2e1e00;--amber-d:#FAC775;
+    --coral-l:#2e1208;--coral-d:#F5C4B3;
+    --blue-l:#081828;--blue-d:#B5D4F4;
+    --green-l:#0a1e05;--green-d:#C0DD97;
+    --gray-l:#2a2a28;--gray-d:#D3D1C7;
+  }
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;overflow:hidden}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--tx);display:flex;flex-direction:column}
+
+/* HEADER */
+.hdr{background:var(--sur);border-bottom:0.5px solid var(--bd);padding:12px 16px 10px;padding-top:calc(12px + var(--safe-t));flex-shrink:0}
+.hdr-row{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.logo{width:34px;height:34px;border-radius:50%;background:var(--purple-l);display:flex;align-items:center;justify-content:center;color:var(--purple);font-size:17px;flex-shrink:0}
+.hdr-title{font-size:16px;font-weight:600;color:var(--tx)}
+.hdr-date{font-size:11px;color:var(--tx2)}
+.stats-row{display:flex;gap:6px}
+.sp{flex:1;background:var(--sur2);border:0.5px solid var(--bd);border-radius:var(--rsm);padding:7px 8px;text-align:center}
+.sp-v{font-size:17px;font-weight:600;color:var(--tx)}
+.sp-l{font-size:10px;color:var(--tx2);margin-top:1px}
+
+/* TOP NAV */
+.top-nav{display:flex;background:var(--sur);border-bottom:0.5px solid var(--bd);flex-shrink:0;overflow-x:auto}
+.top-nav::-webkit-scrollbar{display:none}
+.tnb{flex:1;min-width:70px;padding:10px 6px 8px;font-size:11px;font-weight:500;cursor:pointer;border:none;background:none;color:var(--tx2);border-bottom:2px solid transparent;display:flex;flex-direction:column;align-items:center;gap:2px;font-family:inherit}
+.tnb i{font-size:18px}
+.tnb.on{color:var(--purple);border-bottom-color:var(--purple)}
+
+/* SCROLL AREA */
+.scroll{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:14px 14px calc(24px + var(--safe-b))}
+.sec{display:none}.sec.on{display:block}
+
+/* CARDS */
+.card{background:var(--sur);border:0.5px solid var(--bd);border-radius:var(--r);padding:13px;margin-bottom:9px}
+.badge{font-size:10px;padding:2px 8px;border-radius:var(--rpill);font-weight:600;display:inline-block}
+.sec-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.sec-head h2{font-size:16px;font-weight:600;color:var(--tx)}
+
+/* FORMS */
+.add-form{background:var(--sur);border:0.5px solid var(--bd);border-radius:var(--r);padding:13px;margin-bottom:10px}
+.add-form input,.add-form select,.add-form textarea{width:100%;font-family:inherit;font-size:14px;padding:9px 11px;background:var(--sur2);border:0.5px solid var(--bd2);border-radius:var(--rsm);color:var(--tx);margin-bottom:8px;outline:none;-webkit-appearance:none;appearance:none}
+.add-form textarea{resize:none;min-height:72px}
+.add-form input:focus,.add-form select:focus,.add-form textarea:focus{border-color:var(--purple-m)}
+.form2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.btn-p{width:100%;padding:10px;font-size:14px;font-weight:500;cursor:pointer;background:var(--purple-l);border:0.5px solid var(--purple-m);border-radius:var(--rsm);color:var(--purple-d);font-family:inherit;display:flex;align-items:center;justify-content:center;gap:6px}
+.btn-p:active{opacity:.8}
+.icon-btn{background:none;border:none;cursor:pointer;color:var(--tx3);font-size:17px;padding:5px;font-family:inherit}
+.icon-btn:active{color:var(--tx)}
+
+/* ESTUDOS */
+.est-item{background:var(--sur);border:0.5px solid var(--bd);border-radius:var(--r);padding:13px;margin-bottom:9px}
+.est-r1{display:flex;align-items:center;gap:9px;margin-bottom:8px}
+.chk{width:24px;height:24px;border-radius:50%;border:1.5px solid var(--bd2);cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:13px}
+.chk.done{background:var(--teal);border-color:var(--teal);color:#fff}
+.pb{height:5px;background:var(--bg);border-radius:3px;overflow:hidden;margin:6px 0}
+.pf{height:100%;border-radius:3px;transition:width .3s}
+.est-ctrl{display:flex;align-items:center;gap:6px}
+.min-btn{width:32px;height:32px;border-radius:50%;background:var(--sur2);border:0.5px solid var(--bd2);font-size:18px;font-weight:500;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--tx)}
+.min-btn:active{opacity:.7}
+.min-lbl{font-size:12px;color:var(--tx2);flex:1;text-align:center}
+
+/* PROJETOS */
+.kb-col{margin-bottom:14px}
+.kb-hdr{display:flex;align-items:center;gap:7px;margin-bottom:7px}
+.kb-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.kb-title{font-size:12px;font-weight:600;color:var(--tx2);text-transform:uppercase;letter-spacing:.05em}
+.kb-count{font-size:11px;background:var(--sur2);border:0.5px solid var(--bd);border-radius:var(--rpill);padding:1px 7px;color:var(--tx2)}
+.kb-card{background:var(--sur);border:0.5px solid var(--bd);border-radius:var(--rsm);padding:11px;margin-bottom:6px}
+.kb-name{font-size:14px;font-weight:600;color:var(--tx);margin-bottom:2px}
+.kb-desc{font-size:12px;color:var(--tx2);margin-bottom:7px}
+.kb-acts{display:flex;gap:5px;flex-wrap:wrap}
+.kb-btn{font-size:11px;padding:4px 10px;border-radius:6px;cursor:pointer;border:0.5px solid var(--bd2);background:var(--sur2);color:var(--tx2);font-family:inherit;font-weight:500}
+.kb-btn:active{opacity:.7}
+
+/* IDEIAS */
+.filtros{display:flex;gap:6px;overflow-x:auto;-webkit-overflow-scrolling:touch;margin-bottom:12px;padding-bottom:2px}
+.filtros::-webkit-scrollbar{display:none}
+.filtro{white-space:nowrap;font-size:12px;padding:5px 12px;border-radius:var(--rpill);cursor:pointer;border:0.5px solid var(--bd2);background:var(--sur);color:var(--tx2);font-family:inherit;font-weight:500}
+.filtro.on{background:var(--purple-l);border-color:var(--purple-m);color:var(--purple-d)}
+.idea-card{background:var(--sur);border:0.5px solid var(--bd);border-radius:var(--r);padding:13px;margin-bottom:8px}
+.idea-txt{font-size:14px;color:var(--tx);line-height:1.5;margin-bottom:9px}
+.idea-meta{display:flex;align-items:center;gap:6px}
+.idea-time{font-size:11px;color:var(--tx3);margin-left:auto}
+
+/* RECOMPENSAS */
+.xp-wrap{background:var(--sur2);border-radius:6px;height:9px;overflow:hidden;margin:6px 0}
+.xp-fill{height:100%;border-radius:6px;background:var(--purple);transition:width .6s}
+.level-card{background:var(--sur);border:0.5px solid var(--bd);border-radius:var(--r);padding:14px;margin-bottom:10px}
+.lvl-badge{display:inline-flex;align-items:center;gap:6px;background:var(--purple-l);border-radius:var(--rpill);padding:4px 12px;font-size:12px;font-weight:600;color:var(--purple-d);margin-bottom:9px}
+.sg{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-bottom:12px}
+.sb{background:var(--sur2);border-radius:var(--rsm);padding:9px;text-align:center}
+.sv{font-size:19px;font-weight:600;color:var(--tx)}
+.sl{font-size:10px;color:var(--tx2);margin-top:2px}
+.streak-card{background:var(--amber-l);border:0.5px solid #EF9F27;border-radius:var(--r);padding:13px;margin-bottom:10px;display:flex;align-items:flex-start;gap:12px}
+.streak-num{font-size:34px;font-weight:600;color:var(--amber-d);line-height:1}
+.streak-sub{font-size:12px;color:var(--amber);margin-top:2px}
+.streak-days{display:flex;gap:4px;margin-top:8px}
+.sd{width:27px;height:27px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:600}
+.sd.done{background:var(--amber);color:#fff}
+.sd.today{background:#EF9F27;color:#fff;outline:2px solid var(--amber)}
+.sd.miss{background:var(--sur);color:var(--tx3);border:0.5px solid var(--bd2)}
+.mission{background:var(--sur);border:0.5px solid var(--bd);border-radius:var(--r);padding:12px;margin-bottom:8px}
+.mission.done-m .m-title{text-decoration:line-through;opacity:.6}
+.m-row{display:flex;align-items:center;gap:9px}
+.m-icon{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0}
+.m-title{font-size:13px;font-weight:600;color:var(--tx)}
+.m-sub{font-size:11px;color:var(--tx2)}
+.m-xp{font-size:11px;font-weight:600;color:var(--purple);background:var(--purple-l);padding:2px 8px;border-radius:var(--rpill);white-space:nowrap;flex-shrink:0}
+.m-pb{height:4px;background:var(--bg);border-radius:3px;overflow:hidden;margin-top:8px}
+.m-pf{height:100%;border-radius:3px;transition:width .4s}
+.badges-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}
+.bdg-card{background:var(--sur);border:0.5px solid var(--bd);border-radius:var(--r);padding:12px;text-align:center}
+.bdg-card.locked{opacity:.35;filter:grayscale(1)}
+.bdg-icon{font-size:26px;margin-bottom:5px}
+.bdg-name{font-size:11px;font-weight:600;color:var(--tx);margin-bottom:2px}
+.bdg-desc{font-size:10px;color:var(--tx2);line-height:1.3}
+.bdg-ok{font-size:10px;color:var(--teal);font-weight:600;margin-top:4px}
+.resumo-card{background:var(--sur);border:0.5px solid var(--bd);border-radius:var(--r);padding:13px;margin-bottom:9px}
+.resumo-lbl{font-size:12px;color:var(--tx2);margin-bottom:9px;font-weight:500}
+.r-row{display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:0.5px solid var(--bd)}
+.r-row:last-child{border:none}
+.r-label{font-size:13px;color:var(--tx);flex:1}
+.r-val{font-size:13px;font-weight:600;color:var(--purple)}
+.sim-btns{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:14px}
+.sim-btn{padding:8px 13px;font-size:12px;cursor:pointer;border:0.5px solid var(--bd2);border-radius:var(--rsm);background:var(--sur2);color:var(--tx);font-family:inherit;font-weight:500;display:flex;align-items:center;gap:5px}
+.sim-btn:active{opacity:.7}
+
+/* TOAST */
+.toast{position:fixed;top:calc(20px + var(--safe-t));left:50%;transform:translateX(-50%) translateY(-80px);background:#1D9E75;color:#fff;border-radius:var(--rpill);padding:9px 18px;font-size:13px;font-weight:600;display:flex;align-items:center;gap:8px;z-index:100;transition:transform .35s cubic-bezier(.34,1.56,.64,1);white-space:nowrap;max-width:90vw}
+.toast.show{transform:translateX(-50%) translateY(0)}
+
+/* FAB */
+.fab{position:fixed;right:18px;bottom:calc(18px + var(--safe-b));width:50px;height:50px;border-radius:50%;background:var(--purple);color:#fff;border:none;font-size:22px;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:50;box-shadow:0 2px 12px rgba(83,74,183,.35)}
+.fab:active{transform:scale(.94)}
+
+.empty{text-align:center;color:var(--tx2);font-size:13px;padding:1.8rem;border:0.5px dashed var(--bd2);border-radius:var(--r)}
+.empty i{font-size:28px;display:block;margin-bottom:7px;color:var(--tx3)}
+.sec-lbl{font-size:12px;font-weight:600;color:var(--tx2);text-transform:uppercase;letter-spacing:.05em;margin:14px 0 8px}
+</style>
+</head>
+<body>
+
+<div id="toast" class="toast"><i class="ti ti-check"></i><span id="toast-msg"></span></div>
+
+<div class="hdr">
+  <div class="hdr-row">
+    <div class="logo"><i class="ti ti-bolt"></i></div>
+    <div style="flex:1">
+      <div class="hdr-title">Central de produtividade</div>
+      <div class="hdr-date" id="date-lbl"></div>
+    </div>
+    <div style="text-align:right">
+      <div style="font-size:11px;color:var(--tx2)">nível</div>
+      <div style="font-size:13px;font-weight:600;color:var(--purple)" id="hdr-level">1</div>
+    </div>
+  </div>
+  <div class="stats-row">
+    <div class="sp"><div class="sp-v" id="s-estudos">0</div><div class="sp-l">estudos</div></div>
+    <div class="sp"><div class="sp-v" id="s-projetos">0</div><div class="sp-l">projetos</div></div>
+    <div class="sp"><div class="sp-v" id="s-ideias">0</div><div class="sp-l">ideias</div></div>
+    <div class="sp"><div class="sp-v" id="s-xp">0</div><div class="sp-l">XP</div></div>
+  </div>
+</div>
+
+<div class="top-nav">
+  <button class="tnb on" onclick="go('estudos',this)"><i class="ti ti-school"></i>Estudos</button>
+  <button class="tnb" onclick="go('projetos',this)"><i class="ti ti-briefcase"></i>Projetos</button>
+  <button class="tnb" onclick="go('ideias',this)"><i class="ti ti-bulb"></i>Ideias</button>
+  <button class="tnb" onclick="go('recomp',this)"><i class="ti ti-medal"></i>Recompensas</button>
+</div>
+
+<div class="scroll">
+
+  <!-- ESTUDOS -->
+  <div id="sec-estudos" class="sec on">
+    <div class="sec-head"><h2>Plano de estudos</h2></div>
+    <div id="add-estudo" class="add-form" style="display:none">
+      <input type="text" id="e-titulo" placeholder="Tema (ex: Python, inglês, design)">
+      <div class="form2">
+        <select id="e-cat">
+          <option value="tecnico">Técnico</option>
+          <option value="idioma">Idioma</option>
+          <option value="negocio">Negócio</option>
+          <option value="criativo">Criativo</option>
+          <option value="saude">Saúde</option>
+        </select>
+        <input type="number" id="e-meta" placeholder="Meta (min)" min="5" max="480">
+      </div>
+      <button class="btn-p" onclick="addEstudo()"><i class="ti ti-check"></i> Salvar</button>
+    </div>
+    <div id="estudos-list"></div>
+  </div>
+
+  <!-- PROJETOS -->
+  <div id="sec-projetos" class="sec">
+    <div class="sec-head"><h2>Projetos</h2></div>
+    <div id="add-projeto" class="add-form" style="display:none">
+      <input type="text" id="p-nome" placeholder="Nome do projeto">
+      <input type="text" id="p-desc" placeholder="Descrição curta">
+      <select id="p-status">
+        <option value="backlog">Backlog</option>
+        <option value="andamento">Em andamento</option>
+        <option value="revisao">Revisão</option>
+      </select>
+      <button class="btn-p" onclick="addProjeto()"><i class="ti ti-check"></i> Criar projeto</button>
+    </div>
+    <div id="projetos-list"></div>
+  </div>
+
+  <!-- IDEIAS -->
+  <div id="sec-ideias" class="sec">
+    <div class="sec-head"><h2>Bloco de ideias</h2></div>
+    <div id="add-ideia" class="add-form" style="display:none">
+      <textarea id="i-texto" placeholder="Jogue sua ideia aqui... pode ser bruta, incompleta, só uma palavra!"></textarea>
+      <div class="form2">
+        <select id="i-cat">
+          <option value="produto">Produto</option>
+          <option value="negocio">Negócio</option>
+          <option value="conteudo">Conteúdo</option>
+          <option value="pessoal">Pessoal</option>
+          <option value="estudo">Estudo</option>
+          <option value="outro">Outro</option>
+        </select>
+        <select id="i-energia">
+          <option value="alta">Alta energia</option>
+          <option value="media">Média energia</option>
+          <option value="baixa">Fácil executar</option>
+        </select>
+      </div>
+      <button class="btn-p" onclick="addIdeia()"><i class="ti ti-check"></i> Salvar ideia</button>
+    </div>
+    <div class="filtros" id="filtros">
+      <button class="filtro on" onclick="filtrar('',this)">Todas</button>
+      <button class="filtro" onclick="filtrar('produto',this)">Produto</button>
+      <button class="filtro" onclick="filtrar('negocio',this)">Negócio</button>
+      <button class="filtro" onclick="filtrar('conteudo',this)">Conteúdo</button>
+      <button class="filtro" onclick="filtrar('pessoal',this)">Pessoal</button>
+      <button class="filtro" onclick="filtrar('estudo',this)">Estudo</button>
+    </div>
+    <div id="ideias-list"></div>
+  </div>
+
+  <!-- RECOMPENSAS -->
+  <div id="sec-recomp" class="sec">
+
+    <!-- SUB NAV -->
+    <div style="display:flex;gap:6px;margin-bottom:14px;overflow-x:auto;padding-bottom:2px">
+      <button class="filtro on" id="rn-perfil" onclick="goR('perfil',this)"><i class="ti ti-user"></i> Perfil</button>
+      <button class="filtro" id="rn-missoes" onclick="goR('missoes',this)"><i class="ti ti-target"></i> Missões</button>
+      <button class="filtro" id="rn-badges" onclick="goR('badges',this)"><i class="ti ti-medal"></i> Badges</button>
+      <button class="filtro" id="rn-resumo" onclick="goR('resumo',this)"><i class="ti ti-chart-bar"></i> Resumo</button>
+    </div>
+
+    <div id="r-perfil">
+      <div class="level-card">
+        <div class="lvl-badge"><i class="ti ti-star"></i><span id="level-label">Nível 1 — Iniciante</span></div>
+        <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--tx2);margin-bottom:3px">
+          <span id="xp-cur">0 XP</span><span id="xp-nxt">100 XP para o próximo</span>
+        </div>
+        <div class="xp-wrap"><div class="xp-fill" id="xp-bar" style="width:0%"></div></div>
+      </div>
+      <div class="sg">
+        <div class="sb"><div class="sv" id="p-xp">0</div><div class="sl">XP total</div></div>
+        <div class="sb"><div class="sv" id="p-streak">0</div><div class="sl">dias seguidos</div></div>
+        <div class="sb"><div class="sv" id="p-badges">0</div><div class="sl">badges</div></div>
+      </div>
+      <div class="streak-card">
+        <i class="ti ti-flame" style="font-size:34px;color:var(--amber);flex-shrink:0"></i>
+        <div style="flex:1">
+          <div style="display:flex;align-items:baseline;gap:6px">
+            <span class="streak-num" id="streak-num">0</span>
+            <span style="font-size:13px;font-weight:600;color:var(--amber-d)">dias em sequência</span>
+          </div>
+          <div class="streak-sub" id="streak-sub">Complete uma ação hoje para começar!</div>
+          <div class="streak-days" id="streak-days"></div>
+        </div>
+      </div>
+      <div class="sec-lbl">Simular ações</div>
+      <div class="sim-btns">
+        <button class="sim-btn" onclick="simAction('estudo')"><i class="ti ti-school"></i> Concluir estudo</button>
+        <button class="sim-btn" onclick="simAction('ideia')"><i class="ti ti-bulb"></i> Salvar ideia</button>
+        <button class="sim-btn" onclick="simAction('projeto')"><i class="ti ti-briefcase"></i> Avançar projeto</button>
+        <button class="sim-btn" onclick="simAction('dia')"><i class="ti ti-sun"></i> Completar o dia</button>
+      </div>
+    </div>
+
+    <div id="r-missoes" style="display:none">
+      <div class="sec-lbl">Missões de hoje</div>
+      <div id="mission-list"></div>
+      <div class="sec-lbl">Desafio semanal</div>
+      <div id="weekly-list"></div>
+    </div>
+
+    <div id="r-badges" style="display:none">
+      <div style="font-size:12px;color:var(--tx2);margin-bottom:12px" id="badges-prog"></div>
+      <div class="badges-grid" id="badges-grid"></div>
+    </div>
+
+    <div id="r-resumo" style="display:none">
+      <div class="resumo-card">
+        <div class="resumo-lbl">Esta semana</div>
+        <div class="r-row"><span class="r-label"><i class="ti ti-school"></i> Estudos concluídos</span><span class="r-val" id="r-est">0</span></div>
+        <div class="r-row"><span class="r-label"><i class="ti ti-bulb"></i> Ideias salvas</span><span class="r-val" id="r-ide">0</span></div>
+        <div class="r-row"><span class="r-label"><i class="ti ti-briefcase"></i> Projetos avançados</span><span class="r-val" id="r-pro">0</span></div>
+        <div class="r-row"><span class="r-label"><i class="ti ti-star"></i> XP ganho</span><span class="r-val" id="r-xp">0</span></div>
+        <div class="r-row"><span class="r-label"><i class="ti ti-flame"></i> Streak atual</span><span class="r-val" id="r-stk">0 dias</span></div>
+      </div>
+      <div class="resumo-card">
+        <div class="resumo-lbl">Mensagem da semana</div>
+        <div style="font-size:14px;color:var(--tx);line-height:1.6" id="msg-sem"></div>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<button class="fab" id="fab" onclick="toggleAdd()" aria-label="Adicionar"><i class="ti ti-plus" id="fab-icon"></i></button>
+
+<script>
+const ECAT={tecnico:{bg:'var(--purple-l)',tx:'var(--purple-d)',lb:'Técnico'},idioma:{bg:'var(--teal-l)',tx:'var(--teal-d)',lb:'Idioma'},negocio:{bg:'var(--blue-l)',tx:'var(--blue-d)',lb:'Negócio'},criativo:{bg:'var(--amber-l)',tx:'var(--amber-d)',lb:'Criativo'},saude:{bg:'var(--teal-l)',tx:'var(--teal-d)',lb:'Saúde'}};
+const ICAT={produto:{bg:'var(--purple-l)',tx:'var(--purple-d)'},negocio:{bg:'var(--blue-l)',tx:'var(--blue-d)'},conteudo:{bg:'var(--amber-l)',tx:'var(--amber-d)'},pessoal:{bg:'var(--coral-l)',tx:'var(--coral-d)'},estudo:{bg:'var(--green-l)',tx:'var(--green-d)'},outro:{bg:'var(--gray-l)',tx:'var(--gray-d)'}};
+const ENE={alta:{col:'var(--red)',lb:'Alta energia'},media:{col:'var(--amber)',lb:'Média energia'},baixa:{col:'var(--teal)',lb:'Fácil executar'}};
+const KB={backlog:{dot:'var(--tx3)',lb:'Backlog'},andamento:{dot:'var(--purple)',lb:'Em andamento'},revisao:{dot:'var(--amber)',lb:'Revisão'}};
+const LEVELS=[{min:0,max:100,lb:'Iniciante'},{min:100,max:250,lb:'Aprendiz'},{min:250,max:500,lb:'Focado'},{min:500,max:900,lb:'Consistente'},{min:900,max:1500,lb:'Produtivo'},{min:1500,max:2500,lb:'Expert'},{min:2500,max:9999,lb:'Mestre'}];
+const BADGES=[
+  {id:'e1',icon:'📚',name:'Primeiro passo',desc:'1 estudo concluído',req:'estudo',n:1},
+  {id:'e5',icon:'🎓',name:'Estudante',desc:'5 estudos concluídos',req:'estudo',n:5},
+  {id:'i1',icon:'💡',name:'Faísca',desc:'Primeira ideia salva',req:'ideia',n:1},
+  {id:'i10',icon:'🧠',name:'Gerador de ideias',desc:'10 ideias salvas',req:'ideia',n:10},
+  {id:'p1',icon:'🚀',name:'Em movimento',desc:'Primeiro projeto avançado',req:'projeto',n:1},
+  {id:'s3',icon:'🔥',name:'Em chamas',desc:'3 dias de streak',req:'streak',n:3},
+  {id:'s7',icon:'⚡',name:'Imparável',desc:'7 dias de streak',req:'streak',n:7},
+  {id:'x500',icon:'💎',name:'Diamante',desc:'500 XP acumulados',req:'xp',n:500},
+  {id:'lv3',icon:'🏅',name:'Subindo de nível',desc:'Alcançou nível 3',req:'nivel',n:3},
+];
+const MSGS=['Você está construindo hábitos incríveis. Continue assim!','Cada ideia salva é uma semente. Continue plantando!','Consistência bate talento quando o talento não é consistente.','Seus projetos estão avançando. O progresso é real!','Uma semana produtiva começa com um pequeno passo hoje.'];
+const XP_MAP={estudo:30,ideia:10,projeto:20,dia:50};
+
+function ls(k,d){try{return JSON.parse(localStorage.getItem(k))||d}catch{return d}}
+function ss(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch{}}
+
+let estudos=ls('prd_estudos',[{titulo:'JavaScript avançado',cat:'tecnico',meta:45,min:20,done:false},{titulo:'Inglês — speaking',cat:'idioma',meta:30,min:30,done:true}]);
+let projetos=ls('prd_projetos',[{nome:'App de produtividade',desc:'Cronograma interativo',status:'andamento'},{nome:'Newsletter mensal',desc:'Conteúdo sobre produtividade',status:'backlog'}]);
+let ideias=ls('prd_ideias',[{texto:'Criar um bot no telegram que manda lembretes de estudo',cat:'produto',energia:'alta',ts:Date.now()-3600000}]);
+let gm=ls('prd_gm',{xp:0,streak:0,streakDays:[0,0,0,0,0,0,0],badges:[],wEst:0,wIde:0,wPro:0,wXP:0,mEst:0,mIde:0,mPro:0});
+
+const missions=[
+  {id:'m1',title:'Concluir 1 estudo hoje',sub:'Marque um estudo como feito',icon:'ti-school',bg:'var(--purple-l)',ic:'var(--purple)',xp:30,req:'mEst',need:1},
+  {id:'m2',title:'Salvar 2 ideias',sub:'Jogue suas ideias no bloco',icon:'ti-bulb',bg:'var(--amber-l)',ic:'var(--amber)',xp:20,req:'mIde',need:2},
+  {id:'m3',title:'Avançar 1 projeto',sub:'Mova um projeto de coluna',icon:'ti-briefcase',bg:'var(--teal-l)',ic:'var(--teal)',xp:20,req:'mPro',need:1},
+];
+const weekly=[
+  {title:'7 dias de streak',sub:'Complete missões 7 dias seguidos',icon:'ti-flame',bg:'var(--amber-l)',ic:'var(--amber)',xp:150,getP:()=>gm.streak,need:7},
+  {title:'Acumular 300 XP',sub:'Ganhe XP completando missões',icon:'ti-star',bg:'var(--purple-l)',ic:'var(--purple)',xp:50,getP:()=>gm.xp,need:300},
+];
+
+let curSec='estudos',addOpen=false,curR='perfil',filtroI='';
+
+function save(){ss('prd_estudos',estudos);ss('prd_projetos',projetos);ss('prd_ideias',ideias);ss('prd_gm',gm);}
+
+function go(s,el){
+  curSec=s;addOpen=false;
+  document.querySelectorAll('.sec').forEach(x=>x.classList.remove('on'));
+  document.querySelectorAll('.tnb').forEach(x=>x.classList.remove('on'));
+  document.getElementById('sec-'+s).classList.add('on');
+  el.classList.add('on');
+  hideAll();document.getElementById('fab-icon').className='ti ti-plus';
+  render();
+}
+function goR(s,el){
+  curR=s;
+  ['perfil','missoes','badges','resumo'].forEach(r=>document.getElementById('r-'+r).style.display='none');
+  document.querySelectorAll('#sec-recomp .filtro').forEach(x=>x.classList.remove('on'));
+  document.getElementById('r-'+s).style.display='block';
+  el.classList.add('on');
+  render();
+}
+function hideAll(){['add-estudo','add-projeto','add-ideia'].forEach(id=>{const e=document.getElementById(id);if(e)e.style.display='none'});}
+function toggleAdd(){
+  addOpen=!addOpen;
+  const id='add-'+curSec;
+  const el=document.getElementById(id);
+  if(!el)return;
+  el.style.display=addOpen?'block':'none';
+  document.getElementById('fab-icon').className=addOpen?'ti ti-x':'ti ti-plus';
+  if(addOpen)el.scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+
+let toastTimer;
+function showToast(msg,col){
+  clearTimeout(toastTimer);
+  const t=document.getElementById('toast');
+  document.getElementById('toast-msg').textContent=msg;
+  t.style.background=col||'#1D9E75';
+  t.classList.add('show');
+  toastTimer=setTimeout(()=>t.classList.remove('show'),3000);
+}
+
+function gainXP(amt,reason){
+  gm.xp+=amt;gm.wXP+=amt;
+  checkBadges();
+  showToast('+'+amt+' XP — '+reason);
+  save();render();
+}
+
+function checkBadges(){
+  BADGES.forEach(b=>{
+    if(gm.badges.includes(b.id))return;
+    let ok=false;
+    if(b.req==='estudo'&&gm.wEst>=b.n)ok=true;
+    if(b.req==='ideia'&&gm.wIde>=b.n)ok=true;
+    if(b.req==='projeto'&&gm.wPro>=b.n)ok=true;
+    if(b.req==='streak'&&gm.streak>=b.n)ok=true;
+    if(b.req==='xp'&&gm.xp>=b.n)ok=true;
+    if(b.req==='nivel'&&getLevel(gm.xp).idx>=b.n)ok=true;
+    if(ok){gm.badges.push(b.id);setTimeout(()=>showToast(b.icon+' Badge: '+b.name+'!','#534AB7'),3200);}
+  });
+}
+
+function simAction(type){
+  if(type==='estudo'){gm.wEst++;gm.mEst++;}
+  if(type==='ideia'){gm.wIde++;gm.mIde++;}
+  if(type==='projeto'){gm.wPro++;gm.mPro++;}
+  if(type==='dia'){gm.streak++;gm.streakDays=[...gm.streakDays.slice(1),1];}
+  gainXP(XP_MAP[type],{estudo:'estudo concluído',ideia:'ideia salva',projeto:'projeto avançado',dia:'dia completo'}[type]);
+}
+
+function getLevel(xp){for(let i=LEVELS.length-1;i>=0;i--){if(xp>=LEVELS[i].min)return{...LEVELS[i],idx:i+1};}return{...LEVELS[0],idx:1};}
+
+function fmtTime(ts){const d=Date.now()-ts;if(d<60000)return'agora';if(d<3600000)return Math.round(d/60000)+'min';if(d<86400000)return Math.round(d/3600000)+'h';return Math.round(d/86400000)+'d';}
+
+function addEstudo(){
+  const t=document.getElementById('e-titulo').value.trim();
+  if(!t)return;
+  const c=document.getElementById('e-cat').value;
+  const m=parseInt(document.getElementById('e-meta').value)||30;
+  estudos.push({titulo:t,cat:c,meta:m,min:0,done:false});
+  document.getElementById('e-titulo').value='';document.getElementById('e-meta').value='';
+  save();toggleAdd();render();showToast('Estudo adicionado!');
+}
+function toggleDone(i){
+  estudos[i].done=!estudos[i].done;
+  if(estudos[i].done){gm.wEst++;gm.mEst++;gainXP(30,'estudo concluído');}
+  else save();
+  render();
+}
+function addMin(i,v){estudos[i].min=Math.max(0,estudos[i].min+v);save();render();}
+function removeEstudo(i){if(confirm('Remover?')){estudos.splice(i,1);save();render();}}
+
+function addProjeto(){
+  const n=document.getElementById('p-nome').value.trim();
+  if(!n)return;
+  const d=document.getElementById('p-desc').value.trim();
+  const s=document.getElementById('p-status').value;
+  projetos.push({nome:n,desc:d,status:s});
+  document.getElementById('p-nome').value='';document.getElementById('p-desc').value='';
+  save();toggleAdd();render();showToast('Projeto criado!');
+}
+function moverProjeto(i,dir){
+  const order=['backlog','andamento','revisao'];
+  const ci=order.indexOf(projetos[i].status);
+  const ni=ci+dir;
+  if(ni>=0&&ni<3){projetos[i].status=order[ni];gm.wPro++;gm.mPro++;gainXP(20,'projeto avançado');}
+}
+function removeProjeto(i){if(confirm('Remover?')){projetos.splice(i,1);save();render();}}
+
+function addIdeia(){
+  const t=document.getElementById('i-texto').value.trim();
+  if(!t)return;
+  const c=document.getElementById('i-cat').value;
+  const e=document.getElementById('i-energia').value;
+  ideias.unshift({texto:t,cat:c,energia:e,ts:Date.now()});
+  document.getElementById('i-texto').value='';
+  gm.wIde++;gm.mIde++;save();toggleAdd();render();gainXP(10,'ideia salva');
+}
+function removeIdeia(i){
+  const vis=filtroI?ideias.filter(x=>x.cat===filtroI):ideias;
+  const orig=ideias.indexOf(vis[i]);
+  if(confirm('Remover?')&&orig>-1){ideias.splice(orig,1);save();render();}
+}
+function filtrar(f,el){filtroI=f;document.querySelectorAll('#filtros .filtro').forEach(x=>x.classList.remove('on'));el.classList.add('on');render();}
+
+function render(){
+  document.getElementById('date-lbl').textContent=new Date().toLocaleDateString('pt-BR',{weekday:'long',day:'numeric',month:'long'});
+
+  const lv=getLevel(gm.xp);
+  const pct=Math.round(Math.min((gm.xp-lv.min)/(lv.max-lv.min),1)*100);
+  document.getElementById('hdr-level').textContent=lv.idx;
+  document.getElementById('s-estudos').textContent=estudos.filter(e=>e.done).length+'/'+estudos.length;
+  document.getElementById('s-projetos').textContent=projetos.filter(p=>p.status==='andamento').length;
+  document.getElementById('s-ideias').textContent=ideias.length;
+  document.getElementById('s-xp').textContent=gm.xp;
+
+  // Estudos
+  const el=document.getElementById('estudos-list');
+  if(!estudos.length){el.innerHTML='<div class="empty"><i class="ti ti-school"></i>Nenhum estudo. Toque em + para adicionar.</div>';}
+  else el.innerHTML=estudos.map((e,i)=>{
+    const c=ECAT[e.cat]||ECAT.tecnico;
+    const pct=Math.min(100,Math.round(e.min/e.meta*100));
+    return`<div class="est-item">
+      <div class="est-r1">
+        <div class="chk${e.done?' done':''}" onclick="toggleDone(${i})">${e.done?'<i class="ti ti-check"></i>':''}</div>
+        <div style="flex:1;min-width:0">
+          <div style="font-size:14px;font-weight:600;color:var(--tx);${e.done?'text-decoration:line-through;opacity:.5':''}">${e.titulo}</div>
+          <span class="badge" style="background:${c.bg};color:${c.tx};margin-top:2px">${c.lb}</span>
+        </div>
+        <button class="icon-btn" onclick="removeEstudo(${i})"><i class="ti ti-trash"></i></button>
+      </div>
+      <div class="pb"><div class="pf" style="width:${pct}%;background:${e.done?'var(--teal)':'var(--purple)'}"></div></div>
+      <div class="est-ctrl">
+        <button class="min-btn" onclick="addMin(${i},-5)">−</button>
+        <span class="min-lbl">${e.min} / ${e.meta} min (${pct}%)</span>
+        <button class="min-btn" onclick="addMin(${i},5)">+</button>
+      </div>
+    </div>`;
+  }).join('');
+
+  // Projetos
+  const pl=document.getElementById('projetos-list');
+  const ord=['backlog','andamento','revisao'];
+  pl.innerHTML=ord.map(s=>{
+    const items=projetos.map((p,i)=>({...p,i})).filter(p=>p.status===s);
+    const kb=KB[s];
+    return`<div class="kb-col">
+      <div class="kb-hdr">
+        <div class="kb-dot" style="background:${kb.dot}"></div>
+        <div class="kb-title">${kb.lb}</div>
+        <div class="kb-count">${items.length}</div>
+      </div>
+      ${items.length?items.map(p=>{
+        const ci=ord.indexOf(p.status);
+        return`<div class="kb-card">
+          <div class="kb-name">${p.nome}</div>
+          <div class="kb-desc">${p.desc||''}</div>
+          <div class="kb-acts">
+            ${ci>0?`<button class="kb-btn" onclick="moverProjeto(${p.i},-1)">← Voltar</button>`:''}
+            ${ci<2?`<button class="kb-btn" onclick="moverProjeto(${p.i},1)">Avançar →</button>`:''}
+            <button class="kb-btn" onclick="removeProjeto(${p.i})" style="margin-left:auto">Remover</button>
+          </div>
+        </div>`;}).join(''):'<div style="font-size:12px;color:var(--tx3);text-align:center;padding:10px">Vazio</div>'}
+    </div>`;
+  }).join('');
+
+  // Ideias
+  const vis=filtroI?ideias.filter(x=>x.cat===filtroI):ideias;
+  const il=document.getElementById('ideias-list');
+  if(!vis.length){il.innerHTML='<div class="empty"><i class="ti ti-bulb"></i>Nenhuma ideia. Toque em + para começar!</div>';}
+  else il.innerHTML=vis.map((id,i)=>{
+    const c=ICAT[id.cat]||ICAT.outro;
+    const e=ENE[id.energia]||ENE.media;
+    return`<div class="idea-card">
+      <div class="idea-txt">${id.texto}</div>
+      <div class="idea-meta">
+        <span class="badge" style="background:${c.bg};color:${c.tx}">${id.cat}</span>
+        <span style="font-size:11px;color:${e.col};font-weight:600"><i class="ti ti-bolt"></i> ${e.lb}</span>
+        <span class="idea-time">${fmtTime(id.ts)}</span>
+        <button class="icon-btn" onclick="removeIdeia(${i})" style="padding:4px"><i class="ti ti-trash"></i></button>
+      </div>
+    </div>`;
+  }).join('');
+
+  // Recompensas — perfil
+  document.getElementById('level-label').textContent='Nível '+lv.idx+' — '+lv.lb;
+  document.getElementById('xp-cur').textContent=gm.xp+' XP';
+  document.getElementById('xp-nxt').textContent=(lv.max-gm.xp)+' XP para o próximo';
+  document.getElementById('xp-bar').style.width=pct+'%';
+  document.getElementById('p-xp').textContent=gm.xp;
+  document.getElementById('p-streak').textContent=gm.streak;
+  document.getElementById('p-badges').textContent=gm.badges.length;
+  document.getElementById('streak-num').textContent=gm.streak;
+  document.getElementById('streak-sub').textContent=gm.streak>0?'Não quebre a sequência!':'Complete uma ação hoje para começar!';
+  const dys=['D','S','T','Q','Q','S','S'];
+  document.getElementById('streak-days').innerHTML=gm.streakDays.map((d,i)=>`<div class="sd ${i===6?'today':d?'done':'miss'}">${dys[i]}</div>`).join('');
+
+  // Missões
+  document.getElementById('mission-list').innerHTML=missions.map(m=>{
+    const prog=gm[m.req]||0;const done=prog>=m.need;const pct=Math.round(Math.min(prog/m.need,1)*100);
+    return`<div class="mission${done?' done-m':''}">
+      <div class="m-row">
+        <div class="m-icon" style="background:${m.bg}"><i class="ti ${m.icon}" style="color:${m.ic}"></i></div>
+        <div style="flex:1"><div class="m-title">${m.title}</div><div class="m-sub">${m.sub}</div></div>
+        <div class="m-xp">${done?'✓':'+'+m.xp+' XP'}</div>
+      </div>
+      <div class="m-pb"><div class="m-pf" style="width:${pct}%;background:${done?'var(--teal)':m.ic}"></div></div>
+      <div style="font-size:10px;color:var(--tx3);margin-top:3px">${prog} / ${m.need}</div>
+    </div>`;
+  }).join('');
+  document.getElementById('weekly-list').innerHTML=weekly.map(w=>{
+    const prog=w.getP();const done=prog>=w.need;const pct=Math.round(Math.min(prog/w.need,1)*100);
+    return`<div class="mission${done?' done-m':''}">
+      <div class="m-row">
+        <div class="m-icon" style="background:${w.bg}"><i class="ti ${w.icon}" style="color:${w.ic}"></i></div>
+        <div style="flex:1"><div class="m-title">${w.title}</div><div class="m-sub">${w.sub}</div></div>
+        <div class="m-xp">${done?'✓':'+'+w.xp+' XP'}</div>
+      </div>
+      <div class="m-pb"><div class="m-pf" style="width:${pct}%;background:${done?'var(--teal)':w.ic}"></div></div>
+      <div style="font-size:10px;color:var(--tx3);margin-top:3px">${prog} / ${w.need}</div>
+    </div>`;
+  }).join('');
+
+  // Badges
+  document.getElementById('badges-prog').textContent=gm.badges.length+' / '+BADGES.length+' badges desbloqueadas';
+  document.getElementById('badges-grid').innerHTML=BADGES.map(b=>{
+    const ok=gm.badges.includes(b.id);
+    return`<div class="bdg-card${ok?'':' locked'}">
+      <div class="bdg-icon">${b.icon}</div>
+      <div class="bdg-name">${b.name}</div>
+      <div class="bdg-desc">${b.desc}</div>
+      ${ok?'<div class="bdg-ok"><i class="ti ti-check"></i> Desbloqueada</div>':''}
+    </div>`;
+  }).join('');
+
+  // Resumo
+  document.getElementById('r-est').textContent=gm.wEst;
+  document.getElementById('r-ide').textContent=gm.wIde;
+  document.getElementById('r-pro').textContent=gm.wPro;
+  document.getElementById('r-xp').textContent=gm.wXP+' XP';
+  document.getElementById('r-stk').textContent=gm.streak+' dias';
+  document.getElementById('msg-sem').textContent=MSGS[gm.xp%MSGS.length];
+}
+render();
+</script>
+</body>
+</html>
