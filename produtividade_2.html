@@ -208,7 +208,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 
   <!-- ESTUDOS -->
   <div id="sec-estudos" class="sec on">
-    <div class="sec-head"><h2>Plano de estudos</h2></div>
+    <div class="sec-head"><h2>Plano de estudos</h2><button class="btn-p" style="width:auto;padding:8px 14px" onclick="togForm('add-estudo')"><i class="ti ti-plus"></i> Adicionar</button></div>
     <div id="add-estudo" class="add-form" style="display:none">
       <input type="text" id="e-titulo" placeholder="Tema (ex: Python, inglês, design)">
       <div class="form2">
@@ -228,7 +228,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 
   <!-- PROJETOS -->
   <div id="sec-projetos" class="sec">
-    <div class="sec-head"><h2>Projetos</h2></div>
+    <div class="sec-head"><h2>Projetos</h2><button class="btn-p" style="width:auto;padding:8px 14px" onclick="togForm('add-projeto')"><i class="ti ti-plus"></i> Adicionar</button></div>
     <div id="add-projeto" class="add-form" style="display:none">
       <input type="text" id="p-nome" placeholder="Nome do projeto">
       <input type="text" id="p-desc" placeholder="Descrição curta">
@@ -244,7 +244,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 
   <!-- IDEIAS -->
   <div id="sec-ideias" class="sec">
-    <div class="sec-head"><h2>Bloco de ideias</h2></div>
+    <div class="sec-head"><h2>Bloco de ideias</h2><button class="btn-p" style="width:auto;padding:8px 14px" onclick="togForm('add-ideia')"><i class="ti ti-plus"></i> Adicionar</button></div>
     <div id="add-ideia" class="add-form" style="display:none">
       <textarea id="i-texto" placeholder="Jogue sua ideia aqui... pode ser bruta, incompleta, só uma palavra!"></textarea>
       <div class="form2">
@@ -411,7 +411,7 @@ function goR(s,el){
   el.classList.add('on');
   render();
 }
-function hideAll(){['add-estudo','add-projeto','add-ideia'].forEach(id=>{const e=document.getElementById(id);if(e)e.style.display='none'});}
+function togForm(id){var el=document.getElementById(id);el.style.display=el.style.display==='none'?'block':'none';}function hideAll(){['add-estudo','add-projeto','add-ideia'].forEach(id=>{const e=document.getElementById(id);if(e)e.style.display='none'});}
 function toggleAdd(){
   addOpen=!addOpen;
   const id='add-'+curSec;
